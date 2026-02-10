@@ -1,66 +1,96 @@
 import React, { useState, useEffect } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
+
+// Componentes
 import { Sidebar } from '../components/Sidebar'
 
-// Importa tus componentes reales
+// Vistas según rol
 import { DashboardAdmin } from '../views/admin/DashboardAdmin'
-import { Vendedores } from '../views/Vendedores'
-import { Gamificacion } from '../views/Gamificacion'
-
+import { DashboardTelemarketing } from '../views/telemarketing/DashboardTelemarketing'
 import { DashboardEjecutivo } from '../views/ejecutivo/DashboardEjecutivo'
+
+// Vistas compartidas
+import { Vendedores } from '../views/Vendedores'
 import { Actividades } from '../views/Actividades'
 import { Metas } from '../views/Metas'
-
-import { DashboardTelemarketing } from '../views/telemarketing/DashboardTelemarketing'
-
+import { Gamificacion } from '../views/Gamificacion'
 
 export const AppLayout = () => {
-  const location = useLocation()
-  const { role } = useAuthStore()
-  const [activeView, setActiveView] = useState('')
+  const { role, profile } = useAuthStore()
+  const [activeView, setActiveView] = useState('dashboard')
 
   useEffect(() => {
-    const path = location.pathname.split('/').pop()
-    setActiveView(path || 'dashboard')
-  }, [location])
+    if (role === 'admin' || role === 'director') {
+      setActiveView('dashboard-admin')
+    } else if (role === 'telemarketing') {
+      setActiveView('dashboard-telemarketing')
+    } else if (role === 'ejecutivo_ventas') {
+      setActiveView('dashboard-ejecutivo')
+    }
+  }, [role])
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} />
-      
-      <main className="flex-1 ml-64 p-8">
-        <Routes>
-          {role === 'admin' && (
-            <>
-              <Route path="dashboard-admin" element={<DashboardAdmin />} />
-              <Route path="vendedores" element={<Vendedores />} />
-              <Route path="gamificacion" element={<Gamificacion />} />
-              <Route path="*" element={<Navigate to="/app/dashboard-admin" replace />} />
-            </>
-          )}
-          
-          {role === 'ejecutivo_ventas' && (
-            <>
-              <Route path="dashboard-ejecutivo" element={<DashboardEjecutivo />} />
-              <Route path="actividades" element={<Actividades />} />
-              <Route path="metas" element={<Metas />} />
-              <Route path="*" element={<Navigate to="/app/dashboard-ejecutivo" replace />} />
-            </>
-          )}
-          
-          {role === 'telemarketing' && (
-            <>
-              <Route path="dashboard-telemarketing" element={<DashboardTelemarketing />} />
-              <Route path="encuestas" element={<Encuestas />} />
-              <Route path="calidad" element={<Calidad />} />
-              <Route path="*" element={<Navigate to="/app/dashboard-telemarketing" replace />} />
-            </>
-          )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar 
+        activeView={activeView} 
+        setActiveView={setActiveView}
+        role={role}
+        profile={profile}
+      />
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </main>
+      {/* Main Content - Responsive padding */}
+      <div className="lg:ml-64 min-h-screen">
+        {/* Padding top for mobile menu button */}
+        <main className="p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+          <Routes>
+            {/* Rutas Admin */}
+            {(role === 'admin' || role === 'director') && (
+              <>
+                <Route path="dashboard-admin" element={<DashboardAdmin />} />
+                <Route path="vendedores" element={<Vendedores />} />
+                <Route path="gamificacion" element={<Gamificacion />} />
+              </>
+            )}
+
+            {/* Rutas Telemarketing */}
+            {role === 'telemarketing' && (
+              <>
+                <Route path="dashboard-telemarketing" element={<DashboardTelemarketing />} />
+              </>
+            )}
+
+            {/* Rutas Ejecutivo */}
+            {role === 'ejecutivo_ventas' && (
+              <>
+                <Route path="dashboard-ejecutivo" element={<DashboardEjecutivo />} />
+                <Route path="actividades" element={<Actividades />} />
+                <Route path="metas" element={<Metas />} />
+              </>
+            )}
+
+            {/* Redirect según rol */}
+            <Route 
+              path="/" 
+              element={
+                <Navigate 
+                  to={
+                    role === 'admin' || role === 'director' 
+                      ? 'dashboard-admin' 
+                      : role === 'telemarketing'
+                      ? 'dashboard-telemarketing'
+                      : 'dashboard-ejecutivo'
+                  } 
+                  replace 
+                />
+              } 
+            />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   )
 }

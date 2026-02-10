@@ -36,36 +36,36 @@ export const KPICard = ({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <h3 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 truncate">{title}</p>
+          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2 break-all">
             {formatValue(value)}
           </h3>
           {subtitle && (
-            <p className="text-xs text-gray-500">{subtitle}</p>
+            <p className="text-xs text-gray-500 truncate">{subtitle}</p>
           )}
           {trend && (
             <div className={clsx(
-              "flex items-center gap-1 mt-2 text-sm font-medium",
+              "flex items-center gap-1 mt-2 text-xs sm:text-sm font-medium",
               trend === 'up' ? 'text-green-600' : 'text-red-600'
             )}>
               {trend === 'up' ? (
-                <TrendingUp className="w-4 h-4" />
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
               ) : (
-                <TrendingDown className="w-4 h-4" />
+                <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
               )}
-              <span>{trendValue}</span>
+              <span className="truncate">{trendValue}</span>
             </div>
           )}
         </div>
         {Icon && (
           <div className={clsx(
-            "w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center",
+            "w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br flex items-center justify-center flex-shrink-0",
             colorClasses[color]
           )}>
-            <Icon className="w-6 h-6 text-white" />
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
         )}
       </div>

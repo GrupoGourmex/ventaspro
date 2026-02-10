@@ -32,10 +32,10 @@ export const EmbudoVentas = ({ data }) => {
   const maxValor = Math.max(...etapas.map(e => e.valor))
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-6">Embudo de Ventas</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6">Embudo de Ventas</h3>
       
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {etapas.map((etapa, index) => {
           const Icon = etapa.icon
           const porcentaje = maxValor > 0 ? (etapa.valor / maxValor) * 100 : 0
@@ -45,21 +45,21 @@ export const EmbudoVentas = ({ data }) => {
 
           return (
             <div key={etapa.nombre} className="relative">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${etapa.color} flex items-center justify-center`}>
-                    <Icon className="w-4 h-4 text-white" />
+              <div className="flex items-center justify-between mb-2 gap-2">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br ${etapa.color} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
-                  <span className="font-medium text-gray-700">{etapa.nombre}</span>
+                  <span className="font-medium text-gray-700 text-xs sm:text-sm truncate">{etapa.nombre}</span>
                 </div>
-                <div className="text-right">
-                  <span className="font-bold text-gray-900 text-lg">{etapa.valor}</span>
+                <div className="text-right flex-shrink-0">
+                  <span className="font-bold text-gray-900 text-sm sm:text-lg">{etapa.valor}</span>
                   {index > 0 && (
-                    <span className="text-xs text-gray-500 ml-2">({conversion}%)</span>
+                    <span className="text-xs text-gray-500 ml-1 sm:ml-2">({conversion}%)</span>
                   )}
                 </div>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-100 rounded-full h-2 sm:h-3 overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r ${etapa.color} transition-all duration-500 rounded-full`}
                   style={{ width: `${porcentaje}%` }}
