@@ -21,11 +21,11 @@ export const AppRouter = () => {
           element={user ? <Navigate to="/app" replace /> : <LoginPage />} 
         />
 
-        {/* App Principal - Solo admins */}
+        {/* App Principal */}
         <Route
           path="/app/*"
           element={
-            <ProtectedRoute allowedRoles={['admin', 'director', 'supervisor']}>
+            <ProtectedRoute>
               <AppLayout />
             </ProtectedRoute>
           }
