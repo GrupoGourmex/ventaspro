@@ -2,12 +2,10 @@ import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 
-// Public Pages
-import { LandingPage } from '../pages/LandingPage'
+// Auth
 import { LoginPage } from '../pages/LoginPage'
-import { RegistroPage } from '../pages/RegistroPage'
 
-// Protected Components
+// Protected
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { AppLayout } from '../layouts/AppLayout'
 
@@ -17,31 +15,27 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas Públicas */}
-        <Route 
-          path="/" 
-          element={user ? <Navigate to="/app" replace /> : <LandingPage />} 
-        />
+        {/* Login */}
         <Route 
           path="/login" 
           element={user ? <Navigate to="/app" replace /> : <LoginPage />} 
         />
-        <Route 
-          path="/registro" 
-          element={user ? <Navigate to="/app" replace /> : <RegistroPage />} 
-        />
 
-        {/* Rutas Protegidas - App Principal */}
+        {/* App Principal - Solo admins */}
         <Route
           path="/app/*"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['admin', 'director', 'supervisor']}>
               <AppLayout />
             </ProtectedRoute>
           }
         />
 
-        {/* Catch all - Redirect to landing */}
+        {/* Redirect */}
+        <Route 
+          path="/" 
+          element={<Navigate to={user ? "/app" : "/login"} replace />} 
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

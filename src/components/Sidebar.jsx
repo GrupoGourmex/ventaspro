@@ -4,12 +4,9 @@ import { useAuthStore } from '../store/authStore'
 import { 
   LayoutDashboard, 
   Users,
-  ClipboardList,
   Trophy,
   LogOut,
   BarChart3,
-  FileSpreadsheet,
-  UserCheck,
   Menu,
   X,
   Upload,
@@ -17,43 +14,18 @@ import {
   TrendingUp
 } from 'lucide-react'
 
-export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
+export const Sidebar = ({ activeView, setActiveView, profile }) => {
   const navigate = useNavigate()
   const { signOut } = useAuthStore()
   const [isOpen, setIsOpen] = useState(false)
 
-  // Menú según rol
-  const getMenuItems = () => {
-    if (role === 'admin' || role === 'director') {
-      return [
-        { id: 'dashboard-admin', label: 'Dashboard', icon: LayoutDashboard, path: '/app/dashboard-admin' },
-        { id: 'carga-diaria', label: 'Carga Diaria', icon: Upload, path: '/app/carga-diaria' },
-        { id: 'resumen-semanal', label: 'Resumen Semanal', icon: Calendar, path: '/app/resumen-semanal' },
-        { id: 'vendedores', label: 'Vendedores', icon: Users, path: '/app/vendedores' },
-        { id: 'gamificacion', label: 'Ranking', icon: Trophy, path: '/app/gamificacion' },
-      ]
-    }
-
-    if (role === 'telemarketing') {
-      return [
-        { id: 'dashboard-telemarketing', label: 'Mi Dashboard', icon: LayoutDashboard, path: '/app/dashboard-telemarketing' },
-        { id: 'encuestas', label: 'Gestión Encuestas', icon: FileSpreadsheet, path: '/app/encuestas' },
-        { id: 'calidad', label: 'Control Calidad', icon: UserCheck, path: '/app/calidad' },
-      ]
-    }
-
-    if (role === 'ejecutivo_ventas') {
-      return [
-        { id: 'dashboard-ejecutivo', label: 'Mi Dashboard', icon: LayoutDashboard, path: '/app/dashboard-ejecutivo' },
-        { id: 'actividades', label: 'Mis Actividades', icon: ClipboardList, path: '/app/actividades' },
-        { id: 'metas', label: 'Mis Metas', icon: Trophy, path: '/app/metas' },
-      ]
-    }
-
-    return []
-  }
-
-  const menuItems = getMenuItems()
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/app/dashboard' },
+    { id: 'carga-diaria', label: 'Carga Diaria', icon: Upload, path: '/app/carga-diaria' },
+    { id: 'resumen-semanal', label: 'Resumen Semanal', icon: Calendar, path: '/app/resumen-semanal' },
+    { id: 'vendedores', label: 'Vendedores', icon: Users, path: '/app/vendedores' },
+    { id: 'ranking', label: 'Ranking', icon: Trophy, path: '/app/ranking' },
+  ]
 
   const handleLogout = async () => {
     await signOut()
@@ -63,7 +35,7 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
   const handleMenuClick = (item) => {
     setActiveView(item.id)
     navigate(item.path)
-    setIsOpen(false) // Cerrar menú en móvil
+    setIsOpen(false)
   }
 
   return (
@@ -76,7 +48,7 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Overlay para cerrar menú en móvil */}
+      {/* Overlay */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-30"
@@ -102,7 +74,7 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
               <h1 className="text-lg lg:text-xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-300 bg-clip-text text-transparent">
                 VentasPro
               </h1>
-              <p className="text-xs text-gray-400">Grupo Gourmex</p>
+              <p className="text-xs text-gray-400">CRM de Ventas</p>
             </div>
           </div>
         </div>
@@ -112,16 +84,14 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-yellow-600 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-xs lg:text-sm">
-                {profile?.nombre_completo?.charAt(0) || 'U'}
+                {profile?.nombre_completo?.charAt(0) || 'A'}
               </span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs lg:text-sm font-semibold text-white truncate">
-                {profile?.nombre_completo || 'Usuario'}
+                {profile?.nombre_completo || 'Administrador'}
               </p>
-              <p className="text-xs text-gray-400 capitalize truncate">
-                {role?.replace('_', ' ') || 'Usuario'}
-              </p>
+              <p className="text-xs text-gray-400">Supervisor</p>
             </div>
           </div>
         </div>
@@ -149,30 +119,28 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
           })}
         </nav>
 
-        {/* Quick Stats - Solo para Admin */}
-        {(role === 'admin' || role === 'director') && (
-          <div className="p-3 lg:p-4 border-t border-yellow-600/20 mt-4">
-            <div className="bg-gray-800/50 rounded-lg p-3">
-              <p className="text-xs text-gray-400 mb-2">Accesos Rápidos</p>
-              <div className="space-y-2 text-xs">
-                <button
-                  onClick={() => handleMenuClick({ id: 'carga-diaria', path: '/app/carga-diaria' })}
-                  className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
-                >
-                  <Upload className="w-3 h-3" />
-                  <span>Cargar datos</span>
-                </button>
-                <button
-                  onClick={() => handleMenuClick({ id: 'resumen-semanal', path: '/app/resumen-semanal' })}
-                  className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
-                >
-                  <TrendingUp className="w-3 h-3" />
-                  <span>Ver resumen</span>
-                </button>
-              </div>
+        {/* Quick Stats */}
+        <div className="p-3 lg:p-4 border-t border-yellow-600/20 mt-4">
+          <div className="bg-gray-800/50 rounded-lg p-3">
+            <p className="text-xs text-gray-400 mb-2">Accesos Rápidos</p>
+            <div className="space-y-2 text-xs">
+              <button
+                onClick={() => handleMenuClick({ id: 'carga-diaria', path: '/app/carga-diaria' })}
+                className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
+              >
+                <Upload className="w-3 h-3" />
+                <span>Cargar datos hoy</span>
+              </button>
+              <button
+                onClick={() => handleMenuClick({ id: 'resumen-semanal', path: '/app/resumen-semanal' })}
+                className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
+              >
+                <TrendingUp className="w-3 h-3" />
+                <span>Ver semana actual</span>
+              </button>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 border-t border-yellow-600/20 bg-black">
