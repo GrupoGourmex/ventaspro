@@ -5,9 +5,15 @@ import { useAuthStore } from '../store/authStore'
 // Componentes
 import { Sidebar } from '../components/Sidebar'
 
-// Vistas según rol
+// Vistas Admin
 import { DashboardAdmin } from '../views/admin/DashboardAdmin'
+import { CargaDiaria } from '../views/admin/CargaDiaria'
+import { ResumenSemanal } from '../views/admin/ResumenSemanal'
+
+// Vistas Telemarketing
 import { DashboardTelemarketing } from '../views/telemarketing/DashboardTelemarketing'
+
+// Vistas Ejecutivo
 import { DashboardEjecutivo } from '../views/ejecutivo/DashboardEjecutivo'
 
 // Vistas compartidas
@@ -49,6 +55,8 @@ export const AppLayout = () => {
             {(role === 'admin' || role === 'director') && (
               <>
                 <Route path="dashboard-admin" element={<DashboardAdmin />} />
+                <Route path="carga-diaria" element={<CargaDiaria />} />
+                <Route path="resumen-semanal" element={<ResumenSemanal />} />
                 <Route path="vendedores" element={<Vendedores />} />
                 <Route path="gamificacion" element={<Gamificacion />} />
               </>

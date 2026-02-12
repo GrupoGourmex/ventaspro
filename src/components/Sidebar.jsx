@@ -11,7 +11,10 @@ import {
   FileSpreadsheet,
   UserCheck,
   Menu,
-  X
+  X,
+  Upload,
+  Calendar,
+  TrendingUp
 } from 'lucide-react'
 
 export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
@@ -23,9 +26,11 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
   const getMenuItems = () => {
     if (role === 'admin' || role === 'director') {
       return [
-        { id: 'dashboard-admin', label: 'Dashboard Admin', icon: LayoutDashboard, path: '/app/dashboard-admin' },
-        { id: 'vendedores', label: 'Gestión Vendedores', icon: Users, path: '/app/vendedores' },
-        { id: 'gamificacion', label: 'Ranking General', icon: Trophy, path: '/app/gamificacion' },
+        { id: 'dashboard-admin', label: 'Dashboard', icon: LayoutDashboard, path: '/app/dashboard-admin' },
+        { id: 'carga-diaria', label: 'Carga Diaria', icon: Upload, path: '/app/carga-diaria' },
+        { id: 'resumen-semanal', label: 'Resumen Semanal', icon: Calendar, path: '/app/resumen-semanal' },
+        { id: 'vendedores', label: 'Vendedores', icon: Users, path: '/app/vendedores' },
+        { id: 'gamificacion', label: 'Ranking', icon: Trophy, path: '/app/gamificacion' },
       ]
     }
 
@@ -143,6 +148,31 @@ export const Sidebar = ({ activeView, setActiveView, role, profile }) => {
             )
           })}
         </nav>
+
+        {/* Quick Stats - Solo para Admin */}
+        {(role === 'admin' || role === 'director') && (
+          <div className="p-3 lg:p-4 border-t border-yellow-600/20 mt-4">
+            <div className="bg-gray-800/50 rounded-lg p-3">
+              <p className="text-xs text-gray-400 mb-2">Accesos Rápidos</p>
+              <div className="space-y-2 text-xs">
+                <button
+                  onClick={() => handleMenuClick({ id: 'carga-diaria', path: '/app/carga-diaria' })}
+                  className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
+                >
+                  <Upload className="w-3 h-3" />
+                  <span>Cargar datos</span>
+                </button>
+                <button
+                  onClick={() => handleMenuClick({ id: 'resumen-semanal', path: '/app/resumen-semanal' })}
+                  className="w-full flex items-center gap-2 text-gray-300 hover:text-yellow-400 transition-colors"
+                >
+                  <TrendingUp className="w-3 h-3" />
+                  <span>Ver resumen</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 border-t border-yellow-600/20 bg-black">
